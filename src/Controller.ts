@@ -12,7 +12,10 @@ export class Controller {
 		this.moveVector = new THREE.Vector3( 0, 0, 0 );
 		
 		window.addEventListener( 'keydown', this.keydown.bind(this), false );
-		window.addEventListener( 'keyup',   this.keyup.bind(this), false );
+		window.addEventListener('keyup', this.keyup.bind(this), false);
+		window.addEventListener('touchstart', this.touchStart.bind(this), false);
+		window.addEventListener('touchend', this.touchEnd.bind(this), false);
+		window.addEventListener('touchmove', this.touchStart.bind(this), false);
 
 		this.updateMovementVector();
 	}
@@ -54,12 +57,26 @@ export class Controller {
 		this.updateMovementVector();
 	};
 
+	touchStart( event : TouchEvent) {
+		if(event.touches.item(0).pageX > window.innerWidth / 2) {
+			this.moveRight = true;
+			this.moveLeft = false;
+		}
+		else {
+			this.moveRight = false;
+			this.moveLeft = true;
+		}
+		
+		this.updateMovementVector();
+	}
+	touchEnd(event: TouchEvent) {
+		this.moveRight = false;
+		this.moveLeft = false;
+
+		this.updateMovementVector();
+	}
+
 	updateMovementVector() {
 		this.moveVector.x =  (this.moveLeft ? -this.moveSpeed : 0) + (this.moveRight ? this.moveSpeed : 0 );
-	};
-	
-	dispose() {
-		window.removeEventListener( 'keydown', this.keydown, false );
-		window.removeEventListener( 'keyup', this.keyup, false );
-	};
+	}
 }
